@@ -9,8 +9,8 @@ from langchain_qdrant import QdrantVectorStore
 from qdrant_client import QdrantClient
 from qdrant_client.models import VectorParams, Distance
 
-# Load environment variables (e.g., OpenAI API key)
 load_dotenv()
+
 
 def load_and_index_documents(pdf_dir: Path, qdrant_url: str, collection_name: str):
     # STEP-1 Initialize OpenAI Embedding Model
@@ -24,24 +24,16 @@ def load_and_index_documents(pdf_dir: Path, qdrant_url: str, collection_name: st
     dummy_vector_size = len(embedding_model.embed_query("test"))
     client.recreate_collection(
         collection_name=collection_name,
-        vectors_config=VectorParams(
-            size=dummy_vector_size,
-            distance=Distance.COSINE
-        )
+        vectors_config=VectorParams(size=dummy_vector_size, distance=Distance.COSINE),
     )
 
     # STEP-4 Prepare LangChain Vector Store with Qdrant client
     vector_store = QdrantVectorStore(
-        client=client,
-        collection_name=collection_name,
-        embedding=embedding_model
+        client=client, collection_name=collection_name, embedding=embedding_model
     )
 
     # STEP-5 Configure text splitter for chunking
-    text_splitter = RecursiveCharacterTextSplitter(
-        chunk_size=1000,
-        chunk_overlap=400
-    )
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=400)
 
     # STEP-6 Get all PDF files in directory
     pdf_files = list(pdf_dir.glob("*.pdf"))
@@ -68,11 +60,13 @@ def load_and_index_documents(pdf_dir: Path, qdrant_url: str, collection_name: st
         # Store chunks in vector DB
         vector_store.add_documents(split_docs)
 
-    print(f"✅ Successfully indexed {len(pdf_files)} PDFs into collection '{collection_name}'")
+    print(
+        f"✅ Successfully indexed {len(pdf_files)} PDFs into collection '{collection_name}'"
+    )
 
-# 🔽 Entry point
+
 if __name__ == "__main__":
-    pdf_directory = Path(__file__).parent / "CUAD_subset"
+    pdf_directory = Path(__file__).parent.parent / "CUAD_subset"
     qdrant_url = "http://localhost:6333"
     collection = "cuad_contracts"
 

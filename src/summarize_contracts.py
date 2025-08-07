@@ -7,7 +7,6 @@ from openai import OpenAI
 from utils import extract_text_from_pdf
 
 
-# Load environment variables (for OpenAI key)
 load_dotenv()
 
 # Initialize OpenAI client
@@ -47,10 +46,8 @@ Contract Text:
         return json.loads(content)
     except Exception as e:
         print(f"❌ Error summarizing {contract_id}: {e}")
-        return {
-            "contract_id": contract_id,
-            "summary": "Error generating summary"
-        }
+        return {"contract_id": contract_id, "summary": "Error generating summary"}
+
 
 def summarize_all_contracts(pdf_dir: Path, output_path: str):
     """Process each PDF and save summaries to JSON."""
@@ -72,7 +69,8 @@ def summarize_all_contracts(pdf_dir: Path, output_path: str):
 
     print(f"✅ Saved summaries of {len(summaries)} contracts to {output_path}")
 
+
 if __name__ == "__main__":
-    pdf_directory = Path(__file__).parent / "CUAD_subset"
-    output_file = "contract_summaries.json"
+    pdf_directory = Path(__file__).parent.parent / "CUAD_subset"
+    output_file = Path(__file__).parent.parent / "contract_summaries.json"
     summarize_all_contracts(pdf_directory, output_file)

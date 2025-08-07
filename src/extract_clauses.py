@@ -50,8 +50,9 @@ Contract Text:
             "contract_id": contract_id,
             "termination_clause": "",
             "confidentiality_clause": "",
-            "liability_clause": ""
+            "liability_clause": "",
         }
+
 
 def extract_clauses_from_all_pdfs(pdf_dir: Path, output_path: str):
     results = []
@@ -71,9 +72,12 @@ def extract_clauses_from_all_pdfs(pdf_dir: Path, output_path: str):
     with open(output_path, "w") as f:
         json.dump(results, f, indent=2)
 
-    print(f"✅ Extracted clauses from {len(results)} contracts and saved to {output_path}")
+    print(
+        f"✅ Extracted clauses from {len(results)} contracts and saved to {output_path}"
+    )
+
 
 if __name__ == "__main__":
-    pdf_directory = Path(__file__).parent / "CUAD_subset"
-    output_file = "extracted_clauses.json"
+    pdf_directory = Path(__file__).parent.parent / "CUAD_subset"
+    output_file = Path(__file__).parent.parent / "extracted_clauses.json"
     extract_clauses_from_all_pdfs(pdf_directory, output_file)
