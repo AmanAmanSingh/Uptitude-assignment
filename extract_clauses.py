@@ -4,16 +4,14 @@ from pathlib import Path
 from dotenv import load_dotenv
 from langchain_community.document_loaders import PyPDFLoader
 from openai import OpenAI
+from utils import extract_text_from_pdf
+
 
 load_dotenv()
 
 # Initialize OpenAI client using your key
 openai_client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
-def extract_text_from_pdf(pdf_path: str) -> str:
-    loader = PyPDFLoader(pdf_path)
-    docs = loader.load()
-    return "\n".join([doc.page_content for doc in docs])
 
 def extract_clauses_with_llm(contract_text: str, contract_id: str) -> dict:
     prompt = f"""

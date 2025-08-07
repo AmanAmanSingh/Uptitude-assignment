@@ -4,6 +4,8 @@ from pathlib import Path
 from dotenv import load_dotenv
 from langchain_community.document_loaders import PyPDFLoader
 from openai import OpenAI
+from utils import extract_text_from_pdf
+
 
 # Load environment variables (for OpenAI key)
 load_dotenv()
@@ -11,11 +13,6 @@ load_dotenv()
 # Initialize OpenAI client
 openai_client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
-def extract_text_from_pdf(pdf_path: str) -> str:
-    """Loads and returns text from a PDF file using PyPDFLoader."""
-    loader = PyPDFLoader(pdf_path)
-    docs = loader.load()
-    return "\n".join([doc.page_content for doc in docs])
 
 def generate_contract_summary(contract_text: str, contract_id: str) -> dict:
     """Uses OpenAI LLM to summarize the contract based on key points."""
